@@ -1,17 +1,22 @@
-# Rails Coding Challenge
+# Rails & Vue Coding Challenge
+This app is designed to demonstrate your knowledge of Rails, rspec and Vue.js concepts.
 
-## Getting Started
+## == Getting Started ==========
+### Instructions
+1. Create a copy of this repository and push it to a public repo
+2. Complete each challenge and commit changes to your new repo. **Create a new commit for each challenge, with a meaningful title & message**. Add any files, comments, gems or libraries you need to complete each challenge
+3. Once complete, share a link to your public repo with the Wabisabi team
 
-These instructions will get a copy of the project up and running on your local machine. [Forman](https://github.com/ddollar/foreman) is used to run both servers with one command, but you can run them individually if you prefer.
+### Building & Serving
+These instructions will get a copy of the project up and running on your local machine. [Foreman](https://github.com/ddollar/foreman) is set up to run both servers with one command, but you can run them individually without this gem, if you prefer.
 
-### Prerequisites
+#### Prerequisites
 * Rails 5.2+
 * Ruby 2.3.1+
 * sqlite3 3.19.3
 * yarn 1.19.1
 
-### Installing & Serving
-
+#### Installing & Serving
 1. Install dependencies
 ```
 bundle install
@@ -29,24 +34,20 @@ rails db:seed
 ```
 foreman start
 
-# You can also run the front and back manually separately, if you prefer
 ```
 
-## Challenges
-This app uses Rails in the backend and Vue.js in the frontend.
-When completing these challenges, add any files, comments, gems or libraries you need
-
-### 1. Models & Associations
-A user can have many projects.
+## == Challenges ===============
+### Models & Associations
+**A user can have many projects.
 A user can be a manager for any project.
-A project can only have 1 manager.
+A project can only have 1 manager.**
 
-1. Create a new table in the database, `:project_users`. The table will have the following attributes:
-    * project_id (Integer)
-    * user_id (Integer)
-    * Add an index to :project_id, uniquely scoped to :user_id
+1. Create a new `:project_users` table in the database. The table will have the following attributes:
+    * `:project_id` (Integer)
+    * `:user_id` (Integer)
+    * Add an index to `:project_id`, uniquely scoped to `:user_id`
 
-2. Create 2 new models called: `Project` and `ProjectUser`. Using `:project_users` as a join table, set up all our models with the following associations and validations:
+2. Create 2 new models: `Project` and `ProjectUser`. Using `:project_users` as a join table, set up all our models with the following associations and validations:
     * Project
         * `:project` has_many `:users`
         * `:project` belongs_to `:manager` (where the manager is a User)
@@ -54,16 +55,16 @@ A project can only have 1 manager.
         * validates `:name` must be present
         * validates `:name` must be 2 characters or longer
     * ProjectUser
-        * validates presence of `:user_id` and :project_id
-        * validates uniqueness of :user_id, scoped to :project_id
+        * validates presence of `:user_id` and `:project_id`
+        * validates uniqueness of `:user_id`, scoped to `:project_id`
     * User
         * `:user` has_many `:projects`
         * `:user` has_many `:managed_projects` (where the `:manager_id` is a user id)
 
-### 2. Routes & Controllers
-We will need to be able to list, create and add users to projects through our api
+### Routes & Controllers
+**We need to be able to list, create and add users to projects through our api**
 
-1. In `routes.rb`, add new routes for `user/projects`. We need 3 actions `#create`, `#index` and `#add`.
+1. In `routes.rb`, add 3 new routes for `users/projects`: `POST #create`, `GET #index` and `POST #add`.
 When you run `rake routes`, you should see:
 
 ```
@@ -74,7 +75,7 @@ GET       /users/:user_id/projects            projects#index
 POST      /users/:user_id/projects/:id/add    projects#add
 ```
 
-2. Create a new controller called `ProjectsController`. In `ProjectsController`, create a `:before_action` that retrieves the User with given `:user_id` and stores it as `@user`. If the user is not found, log an error message: "User #{ params[:user_id] not found}"
+2. Create a new controller called `ProjectsController`. In `ProjectsController`, create a `:before_action` that retrieves the User with given `:user_id` and stores it as `@user`. If the user is not found, log an error message: "User #{ params[:user_id] not found }"
 
 3. In `ProjectsController`, write a `#create` method that does the following:
     * It uses strong params. It requires a `:project` hash, and permits only `:name` attribute
@@ -92,8 +93,8 @@ POST      /users/:user_id/projects/:id/add    projects#add
         * Otherwise, return the projects by date created (newest first)
     * It returns the results as json array
 
-### 5. Rspec Unit tests
-Using rspec, write tests for some of our backend code.
+### Rspec Unit Tests
+**Using rspec, write tests for some of our backend code.**
 
 1. For our `Project` model, write specs that ensure the following:
     * We validate the presence of `:name`
@@ -106,25 +107,23 @@ Using rspec, write tests for some of our backend code.
     * ProjectsController#index returns an array of project objects for the given user
     * In ProjectsController#index action, if `params[:sort] = 'name'`, the results are returned ordered by name (ascending)
 
-### 4. UI & Vue components
-We need to display all our users in the front end. For this example, we are pretending that our users have already been fetched from the api and are stored in our Vuex store.
+### UI & Vue Components
+**We need to display all our users in the front end. For this example, an array of users has already been fetched from the API and is stored in our Vuex store.**
 
-Add all styles for your component to the component file itself.
-
-Use [BEM Methodology](http://getbem.com/) in your template, if possible
-
-1. Create a vue component in `app/javascript/packs/components` called `UserCard.vue`. Build the component to look like the card in the given mockup: `app/assets/images/mockup_user_card.png`.
-    * Style spefications:
+1. Create a vue component in `app/javascript/packs/components` called `UserCard.vue`. Build the component to look like the card in the given mockup: `app/assets/images/mockup_user_card.png`. Specifications:
+    * Use [BEM Methodology](http://getbem.com/) for your template and styles, if possible
+    * Add all styles directly inside the `UserCard.vue` component file, in a single, scoped `<style>` tag
+    * Style details:
         * Card
             * dimensions: 270x350px(width x height)
             * border-radius: 4px
-            * on hover: box-shadow (4px 4px 12px #DBDBDB)
+            * on hover, add a box-shadow: offset-x (4px), offest-y (4px), blur (12px)
         * Gradient colours: #56CCF2 and #6C56F2
         * Font: Arial, 30px, bold
         * Avatar border width: 3px
     * The card should accept `:user` as a prop
     * The name on the card should = `user.name`
-    * The avatar on the card should be `user.avatar_url`
+    * The avatar on the card should be loaded from `user.avatar_url`
 
-3. In our Vuex store, we have an array called `user/_list`. In `UsersIndex.vue`, reference the `user/_list` array from our store and render each user as a `UserCard` component. The user cards should be rendered inside the `.cards-container` div. The result should look similar to this mockup: `app/assets/images/mockup_users_index.png`
+3. In our Vuex store, we have an array called `user/_list`. In `UsersIndex.vue`, reference the `user/_list` array from our store and render each user as a `UserCard` component. The user cards should be rendered inside the existing`.cards-container` div. The result should look similar to this mockup: `app/assets/images/mockup_users_index.png`
 
